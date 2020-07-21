@@ -1,10 +1,8 @@
+// default imports
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -12,6 +10,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+// added imports
+import Input from '../../shared/formelements/Input';
+import { useForm } from '../../shared/hooks/form-hook';
 
 function Copyright() {
   return (
@@ -48,6 +50,24 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  const [formState, inputHandler] = useForm(
+    {
+      email: {
+        value: '',
+        isValid: false
+      },
+      password: {
+        value: '',
+        isValid: false
+      },
+    },
+    false
+  );
+
+  const authSubmitHandler = event => {
+    event.preventDefault();
+    console.log(formState);
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,32 +79,18 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
+        <form className={classes.form} onSubmit={authSubmitHandler}>
+          <Input
             id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
+            label="Email Adress"
+            errorText="Please enter a valid email address."
+            onInput={inputHandler}
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
+          <Input
             id="password"
-            autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            label="Password"
+            errorText="Please enter a valid password (min 6 characters)."
+            onInput={inputHandler}
           />
           <Button
             type="submit"
