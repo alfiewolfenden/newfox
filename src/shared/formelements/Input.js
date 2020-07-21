@@ -5,12 +5,12 @@ import TextField from '@material-ui/core/TextField';
 
 const Input = props => {
 
-    const [isError, setIsError] = useState(false);
     const { id, label, onInput } = props;
+    const [isError, setIsError] = useState(true);
+    const [isTouched, setIsTouched] = useState(false);
     const [inputValue, setInputValue] = useState('');
 
     const emailErrorHandler = (value) => {
-        console.log(/^\S+@\S+\.\S+$/.test(value));
         return (
             /^\S+@\S+\.\S+$/.test(value)
         );
@@ -20,12 +20,6 @@ const Input = props => {
         return (
             value.trim().length >= 6
         );
-    };
-
-    const onChangeHandler = event => {
-        let val = event.target.value;
-        setInputValue(val);
-        errorToggleHandler(event.target.id, val)
     };
 
     const errorToggleHandler = (id, value) => {
@@ -42,8 +36,18 @@ const Input = props => {
         }
     };
 
+    const isTouchedHandler = () => {
+        setIsTouched(true);
+    };
+
+    const onChangeHandler = event => {
+        let val = event.target.value;
+        setInputValue(val);
+        errorToggleHandler(event.target.id, val)
+    };
+
     useEffect(() => {
-        onInput(id, inputValue, isError)
+        onInput(id, inputValue, !isError)
     }, [id, inputValue, isError, onInput]);
 
     return (
@@ -56,9 +60,10 @@ const Input = props => {
             label={label}
             type={id}
             autoFocus={id === "email"}
+            onBlur={isTouchedHandler}
             onChange={onChangeHandler}
-            error={isError}
-            helperText={isError && props.errorText}
+            error={isError && isTouched}
+            helperText={isError && isTouched && props.errorText}
         />
     )
 };
