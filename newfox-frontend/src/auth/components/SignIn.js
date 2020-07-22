@@ -13,7 +13,11 @@ import Container from '@material-ui/core/Container';
 
 // added imports
 import Input from '../../shared/formelements/Input';
+import ErrorModal from '../../shared/uielements/ErrorModal';
+import LoadingSpinner from '../../shared/uielements/LoadingSpinner';
 import { useForm } from '../../shared/hooks/form-hook';
+import { useHttpClient } from '../../shared/hooks/http-hook';
+
 
 function Copyright() {
   return (
@@ -48,8 +52,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+const SignIn = () => {
   const classes = useStyles();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [formState, inputHandler] = useForm(
     {
       email: {
@@ -64,61 +69,87 @@ export default function SignIn() {
     false
   );
 
-  const authSubmitHandler = event => {
+  const authSubmitHandler = async event => {
+
     event.preventDefault();
-    console.log(formState);
+
+    try {
+
+      const responseData = await sendRequest(
+        process.env.REACT_APP_BACKEND_URL + '/users/signin',
+        'POST',
+        JSON.stringify({
+          email: formState.inputs.email.value,
+          password: formState.inputs.password.value
+        }),
+        {
+          'Content-Type': 'application/json'
+        }
+      );
+      console.log(responseData);
+
+    } catch (err) {
+      console.log(err);
+    }
+
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
+    <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
+      <Container component="main" maxWidth="xs">
+        {isLoading && <LoadingSpinner asOverlay />}
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
         </Typography>
-        <form className={classes.form} onSubmit={authSubmitHandler}>
-          <Input
-            id="email"
-            label="Email Adress"
-            errorText="Please enter a valid email address."
-            onInput={inputHandler}
-          />
-          <Input
-            id="password"
-            label="Password"
-            errorText="Please enter a valid password (min 6 characters)."
-            onInput={inputHandler}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            disabled={!formState.isValid}
-          >
-            Sign In
+          <form className={classes.form} onSubmit={authSubmitHandler}>
+            <Input
+              id="email"
+              label="Email Adress"
+              errorText="Please enter a valid email address."
+              onInput={inputHandler}
+            />
+            <Input
+              id="password"
+              label="Password"
+              errorText="Please enter a valid password (min 6 characters)."
+              onInput={inputHandler}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              disabled={!formState.isValid}
+            >
+              Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
               </Link>
+              </Grid>
+              <Grid item>
+                <Link href="/signup" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link href="/signup" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </Container>
+          </form>
+        </div>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+      </Container>
+    </React.Fragment>
   );
 }
+
+export default SignIn;

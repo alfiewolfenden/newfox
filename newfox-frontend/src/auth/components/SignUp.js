@@ -14,9 +14,13 @@ import Container from '@material-ui/core/Container';
 
 // added imports
 import Input from '../../shared/formelements/Input';
+import ErrorModal from '../../shared/uielements/ErrorModal';
+import LoadingSpinner from '../../shared/uielements/LoadingSpinner';
 import { useForm } from '../../shared/hooks/form-hook';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
-function Copyright() {
+
+const Copyright = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
@@ -49,8 +53,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+const SignUp = () => {
   const classes = useStyles();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [formState, inputHandler] = useForm(
     {
       email: {
@@ -65,80 +70,106 @@ export default function SignUp() {
     false
   );
 
-  const authSubmitHandler = event => {
+
+  const authSubmitHandler = async event => {
+
     event.preventDefault();
-    console.log(formState);
+
+    try {
+      const responseData = await sendRequest(
+        process.env.REACT_APP_BACKEND_URL + '/users/signup',
+        'POST',
+        JSON.stringify({
+          email: formState.inputs.email.value,
+          password: formState.inputs.password.value
+        }),
+        {
+          'Content-Type': 'application/json'
+        }
+      );
+      console.log(responseData);
+
+    } catch (err) {
+      console.log(err);
+    }
+
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <form className={classes.form} onSubmit={authSubmitHandler}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="firstName"
-                variant="outlined"
-                fullWidth
-                id="firstName"
-                label="First Name"
-              />
+    <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
+      <Container component="main" maxWidth="xs">
+        {isLoading && <LoadingSpinner asOverlay />}
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <form className={classes.form} onSubmit={authSubmitHandler}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="firstName"
+                  variant="outlined"
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  id="companyName"
+                  label="Company Name"
+                  name="companyName"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Input
+                  id="email"
+                  label="Email Adress"
+                  errorText="Please enter a valid email address."
+                  onInput={inputHandler}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Input
+                  id="password"
+                  label="Password"
+                  errorText="Please enter a valid password (min 6 characters)."
+                  onInput={inputHandler}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                fullWidth
-                id="companyName"
-                label="Company Name"
-                name="companyName"
-              />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              disabled={!formState.isValid}
+            >
+              Sign Up
+            </Button>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link href="/signin" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Input
-                id="email"
-                label="Email Adress"
-                errorText="Please enter a valid email address."
-                onInput={inputHandler}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Input
-                id="password"
-                label="Password"
-                errorText="Please enter a valid password (min 6 characters)."
-                onInput={inputHandler}
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            disabled={!formState.isValid}
-          >
-            Sign Up
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link href="/signin" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
-    </Container>
+          </form>
+        </div>
+        <Box mt={5}>
+          <Copyright />
+        </Box>
+      </Container>
+    </React.Fragment>
   );
 }
+
+export default SignUp;
