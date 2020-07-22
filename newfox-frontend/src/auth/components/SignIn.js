@@ -1,5 +1,5 @@
 // default imports
-import React from 'react';
+import React, { useContext } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,6 +17,7 @@ import ErrorModal from '../../shared/uielements/ErrorModal';
 import LoadingSpinner from '../../shared/uielements/LoadingSpinner';
 import { useForm } from '../../shared/hooks/form-hook';
 import { useHttpClient } from '../../shared/hooks/http-hook';
+import { AuthContext } from '../../shared/context/auth-context';
 
 
 function Copyright() {
@@ -54,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SignIn = () => {
   const classes = useStyles();
+  const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [formState, inputHandler] = useForm(
     {
@@ -86,7 +88,7 @@ const SignIn = () => {
           'Content-Type': 'application/json'
         }
       );
-      console.log(responseData);
+      auth.login(responseData.userId, responseData.token);
 
     } catch (err) {
       console.log(err);

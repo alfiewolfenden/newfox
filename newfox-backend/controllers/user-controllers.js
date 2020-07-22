@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 const HttpError = require('../models/http-error');
@@ -48,7 +49,19 @@ const signupUser = async (req, res, next) => {
         return next(error);
     }
 
-    res.status(201).json({ userId: newUser.id, email: newUser.email });
+    let token;
+    try {
+        token = jwt.sign(
+            { userId: newUser.id, email: newUser.email },
+            process.env.JWT_KEY,
+            { expiresIn: '1h' }
+        );
+    } catch (err) {
+        const error = new HttpError('Something went wrong :(', 500);
+        return next(error);
+    }
+
+    res.status(201).json({ userId: newUser.id, email: newUser.email, token });
 };
 
 const signinUser = async (req, res, next) => {
@@ -80,10 +93,19 @@ const signinUser = async (req, res, next) => {
         return next(error);
     }
 
-    res.status(200).json({
-        userId: currentUser.id,
-        email: currentUser.email
-    });
+    let token;
+    try {
+        token = jwt.sign(
+            { userId: currentUser.id, email: currentUser.email },
+            process.env.JWT_KEY,
+            { expiresIn: '1h' }
+        );
+    } catch (err) {
+        const error = new HttpError('Something went wrong :(', 500);
+        return next(error);
+    }
+
+    res.status(200).json({ userId: currentUser.id, email: currentUser.email, token });
 };
 
 exports.signupUser = signupUser;
