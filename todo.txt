@@ -1,7 +1,1 @@
-Add Breweries to DB
-Create BreweryList component
-Add Beers to DB
-Create BeerList component
-Create BeerItem component
-Create SearchBar Component
-Create Catalog Page
+Add functionality to catalog

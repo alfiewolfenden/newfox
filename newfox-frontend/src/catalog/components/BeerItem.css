@@ -1,0 +1,12 @@
+.breweryitem__image-container {
+    width: 121px;
+    height: 75px;
+    overflow: hidden;
+    margin: 5px;
+}
+
+.breweryitem__image-container img {
+    height: 100%;
+    margin-left: 50%;
+    transform: translateX(-50%);
+}

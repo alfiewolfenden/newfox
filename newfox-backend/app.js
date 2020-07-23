@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/user-routes');
+const breweriesRoutes = require('./routes/breweries-routes');
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/users', userRoutes);
+
+app.use('/api/breweries', breweriesRoutes);
 
 app.use((req, res, next) => {
     const error = new HttpError('Could not find this route', 404);

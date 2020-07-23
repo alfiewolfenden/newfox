@@ -1,0 +1,7 @@
+.Itemlist__grid-container {
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}

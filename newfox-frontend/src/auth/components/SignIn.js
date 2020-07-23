@@ -100,7 +100,6 @@ const SignIn = () => {
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
       <Container component="main" maxWidth="xs">
-        {isLoading && <LoadingSpinner asOverlay />}
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
@@ -122,7 +121,7 @@ const SignIn = () => {
               errorText="Please enter a valid password (min 6 characters)."
               onInput={inputHandler}
             />
-            <Button
+            {!isLoading ? <Button
               type="submit"
               fullWidth
               variant="contained"
@@ -131,7 +130,7 @@ const SignIn = () => {
               disabled={!formState.isValid}
             >
               Sign In
-          </Button>
+          </Button> : <LoadingSpinner asOverlay />}
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">

@@ -102,7 +102,6 @@ const SignUp = () => {
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
       <Container component="main" maxWidth="xs">
-        {isLoading && <LoadingSpinner asOverlay />}
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
@@ -148,7 +147,7 @@ const SignUp = () => {
                 />
               </Grid>
             </Grid>
-            <Button
+            {!isLoading ? <Button
               type="submit"
               fullWidth
               variant="contained"
@@ -157,7 +156,7 @@ const SignUp = () => {
               disabled={!formState.isValid}
             >
               Sign Up
-            </Button>
+              </Button> : <LoadingSpinner asOverlay />}
             <Grid container justify="flex-end">
               <Grid item>
                 <Link href="/signin" variant="body2">

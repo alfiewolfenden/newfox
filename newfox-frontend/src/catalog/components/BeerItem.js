@@ -1,8 +1,12 @@
 import React from 'react';
 
-const BeerItem = () => {
-    return(
-        <h2>I am an Item</h2>
+import './BeerItem.css'
+
+const BeerItem = props => {
+    return (
+        <div className="beeritem__image-container">
+            <img src={props.url} alt={props.alt} />
+        </div>
     );
 };
 
