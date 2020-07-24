@@ -6,6 +6,7 @@ import { AuthContext } from './shared/context/auth-context';
 import SignIn from './auth/components/SignIn';
 import SignUp from './auth/components/SignUp';
 import Catalog from './catalog/catalog';
+import Cart from './cart/cart';
 import MainNavigation from './nav/MainNavigation';
 
 import './App.css';
@@ -19,6 +20,9 @@ const App = () => {
       <Switch>
         <Route path="/catalog">
           <Catalog />
+        </Route>
+        <Route path="/cart">
+          <Cart />
         </Route>
         <Redirect to="/catalog" />
       </Switch>

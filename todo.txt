@@ -1,1 +1,1 @@
-Add a cart
+Add cart full functionality
