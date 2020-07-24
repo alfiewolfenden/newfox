@@ -10,6 +10,7 @@ import './catalog.css'
 const Catalog = () => {
     const [breweryList, setBreweryList] = useState();
     const [beerList, setBeerList] = useState();
+    const [searchedBeerList, setSearchedBeerList] = useState();
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
     useEffect(() => {
@@ -24,6 +25,10 @@ const Catalog = () => {
         requestItemData();
     }, [sendRequest])
 
+    const updateSearchList = (newArray) => {
+        setSearchedBeerList(newArray);
+    };
+
     return (
         <div className="catalog__container">
             <ErrorModal error={error} onClear={clearError} />
@@ -33,13 +38,13 @@ const Catalog = () => {
                 </div>
             )}
             {breweryList && <ItemList data={breweryList} item="brewery" />}
-            <SearchBar />
+            <SearchBar data={beerList} onChange={updateSearchList} />
             {isLoading && !beerList && (
                 <div className="center">
                     <LoadingSpinner />
                 </div>
             )}
-            {beerList && <ItemList data={beerList} item="beer" />}
+            {searchedBeerList && <ItemList data={searchedBeerList} item="beer" />}
         </div>
     );
 

@@ -9,19 +9,19 @@ const NavLinks = () => {
 
     return (
         <ul className="nav-links">
-            {!auth.isLoggedIn && (
+            {/* {!auth.isLoggedIn && (
                 <li>
                     <NavLink to="/signin" exact>SIGN IN</NavLink>
                 </li>
-            )}
-            {!auth.isLoggedIn && (
+            )} */}
+            {auth.isLoggedIn && (
                 <li>
-                    <NavLink to="/signup">SIGN UP</NavLink>
+                    <NavLink to="/catalog">CATALOG</NavLink>
                 </li>
             )}
             {auth.isLoggedIn && (
                 <li>
-                    <NavLink to="/catalog">CATALOG</NavLink>
+                    <NavLink to="/cart">CART</NavLink>
                 </li>
             )}
             {auth.isLoggedIn && (

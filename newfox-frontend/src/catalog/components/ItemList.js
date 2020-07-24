@@ -17,7 +17,15 @@ const ItemList = props => {
             }
             {props.item === "beer" &&
                 listData.map(item => (
-                    <BeerItem key={item.id} url={item.image} alt={item.name} />
+                    <BeerItem
+                        key={item.id}
+                        name={item.name}
+                        url={item.image}
+                        size={item.size}
+                        style={item.style}
+                        abv={item.abv}
+                        price={item.price}
+                    />
                 ))
             }
         </div>

@@ -1,5 +1,9 @@
 .searchbar__main {
     width: 100%;
-    text-align: center;
     margin-bottom: 20px;
+}
+
+.searchbar__field {
+    margin: 0 auto;
+    width: 50%;
 }

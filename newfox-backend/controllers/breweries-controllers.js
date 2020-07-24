@@ -48,21 +48,25 @@ const getBreweries = async (req, res, next) => {
 };
 
 const addBeer = async (req, res, next) => {
-    const { name, brewery, image, size } = req.body;
+    const { name, brewery, image, size, style, abv, price } = req.body;
 
     const newBeer = new Beer(
         {
             name,
             brewery,
             image,
-            size
+            size,
+            style,
+            abv,
+            price
         }
-    )
+    );
 
     try {
         await newBeer.save();
     } catch (err) {
         const error = new HttpError('Could not save Beer', 500);
+        console.log(err);
         return next(error);
     }
 
