@@ -19,12 +19,14 @@ const ItemList = props => {
                 listData.map(item => (
                     <BeerItem
                         key={item.id}
+                        id={item.id}
                         name={item.name}
                         url={item.image}
                         size={item.size}
                         style={item.style}
                         abv={item.abv}
                         price={item.price}
+                        qqty={item.qqty}
                     />
                 ))
             }

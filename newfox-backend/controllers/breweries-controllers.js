@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const Brewery = require('../models/brewery');
 const Beer = require('../models/beer');
 const HttpError = require('../models/http-error');
@@ -21,7 +23,8 @@ const addBrewery = async (req, res, next) => {
     const newBrewery = new Brewery(
         {
             name,
-            image
+            image,
+            beers: []
         }
     );
 
@@ -48,29 +51,51 @@ const getBreweries = async (req, res, next) => {
 };
 
 const addBeer = async (req, res, next) => {
-    const { name, brewery, image, size, style, abv, price } = req.body;
+    const { brewery, image, name, abv, style, qqty, size, price } = req.body;
+
+    let currentBrewery;
+
+    try {
+        currentBrewery = await Brewery.findOne({ name: brewery })
+    } catch (err) {
+        const error = new HttpError('Something went wrong :(', 500);
+        return next(error);
+    }
+
+    if (!currentBrewery) {
+        const error = new HttpError('Could not find brewery, failed to add beer.', 404);
+        return next(error);
+    }
 
     const newBeer = new Beer(
         {
-            name,
-            brewery,
+            brewery: currentBrewery,
             image,
-            size,
-            style,
+            name,
             abv,
+            style,
+            qqty,
+            size,
             price
         }
     );
 
+    console.log(newBeer);
+
     try {
-        await newBeer.save();
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await newBeer.save({ session: sess });
+        currentBrewery.beers.push(newBeer);
+        await currentBrewery.save({ session: sess });
+        await sess.commitTransaction();
     } catch (err) {
-        const error = new HttpError('Could not save Beer', 500);
         console.log(err);
+        const error = new HttpError('Creating beer failed, please try again', 500);
         return next(error);
     }
 
-    res.status(201).json({ Beer: newBeer.name, Brewery: newBeer.brewery });
+    res.status(201).json({ Beer: newBeer.name, Brewery: newBeer.brewery.name });
 };
 
 const getBeers = async (req, res, next) => {

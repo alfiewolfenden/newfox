@@ -38,7 +38,8 @@ const signupUser = async (req, res, next) => {
     const newUser = new User(
         {
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            cartitems: []
         }
     );
 

@@ -1,20 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Typography from '@material-ui/core/Typography';
 
+import { AuthContext } from '../../shared/context/auth-context';
+import { useHttpClient } from '../../shared/hooks/http-hook';
+import ErrorModal from '../../shared/uielements/ErrorModal';
 import Modal from '../../shared/uielements/Modal';
 import Button from '../../shared/formelements/Button';
 import './BeerItem.css'
 
 const BeerItem = props => {
-    const { name, url, size, style, abv, price } = props
+    const auth = useContext(AuthContext);
+    const { error, sendRequest, clearError } = useHttpClient();
+    const { id, name, url, size, style, abv, price, qqty } = props
     const [showDescriptionModal, setShowDescriptionModal] = useState(false);
 
     const showDescriptionModalHandler = () => {
         setShowDescriptionModal(!showDescriptionModal);
     };
 
+    const addToCart = async () => {
+        try {
+            const responseData = await sendRequest(
+                process.env.REACT_APP_BACKEND_URL + '/cart',
+                'POST',
+                JSON.stringify({
+                    beerId: id
+                }),
+                {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${auth.token}`
+                }
+            );
+            console.log(responseData);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     return (
         <React.Fragment>
+            <ErrorModal error={error} onClear={clearError} />
             <Modal
                 show={showDescriptionModal}
                 onCancel={showDescriptionModalHandler}
@@ -42,16 +67,19 @@ const BeerItem = props => {
             </Modal>
             <div
                 className="beeritem__image-container"
-                onClick={showDescriptionModalHandler}
+            // onClick={showDescriptionModalHandler}
             >
                 <img src={url} alt={name} />
-                <span>{name}</span>
+                <span>{`${name} (${qqty})`}</span>
                 <Typography variant="caption" color="textSecondary" align="center">
                     {style}{' '}{abv}{'%'}
                 </Typography>
                 <Typography variant="body2" align="center">
                     {size}{' ⇒ '}{price}
                 </Typography>
+                <div>
+                    <button onClick={addToCart}>+</button>
+                </div>
             </div>
         </React.Fragment>
     );

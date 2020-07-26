@@ -1,13 +1,13 @@
 .beeritem__image-container {
     width: 150px;
-    height: 150px;
+    height: 200px;
     overflow: hidden;
     margin: 5px;
     display: flex;
     flex-direction: column;
     align-items: center; /* vertical */
     justify-content: center; /* horizontal */
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .beeritem__image-container img {

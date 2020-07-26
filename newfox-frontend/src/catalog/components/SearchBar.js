@@ -10,7 +10,6 @@ const SearchBar = props => {
     const filterFunction = (beer, input) => {
         if (
             beer.name.toLowerCase().includes(input) ||
-            beer.brewery.toLowerCase() === input ||
             beer.style.toLowerCase() === input
         ) return true;
     };
