@@ -31,12 +31,16 @@ const Cart = () => {
         requestItemData();
     }, [sendRequest, auth.token])
 
+    const itemDeletedHandler = (deletedItemId) => {
+        setCartItemListData(prevItems => prevItems.filter(i => i.id !== deletedItemId));
+    };
+
     return (
         <React.Fragment>
             <ErrorModal error={error} onClear={clearError} />
             <div className="cart__container">
                 <h2>Cart</h2>
-                {!isLoading && cartItemListData ? <CartItemList data={cartItemListData} /> : <LoadingSpinner />}
+                {!isLoading && cartItemListData ? <CartItemList data={cartItemListData} onDeleteItem={itemDeletedHandler} /> : <LoadingSpinner />}
                 <h3>Total: $750</h3>
                 <div>
                     <p>Escompte de 5 % en cas de paiement comptant</p>

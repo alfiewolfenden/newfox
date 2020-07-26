@@ -1,1 +1,1 @@
-Add cart full functionality
+Plan out remaining app functions.

@@ -69,7 +69,8 @@ const addBeer = async (req, res, next) => {
 
     const newBeer = new Beer(
         {
-            brewery: currentBrewery,
+            breweryId: currentBrewery,
+            brewery,
             image,
             name,
             abv,

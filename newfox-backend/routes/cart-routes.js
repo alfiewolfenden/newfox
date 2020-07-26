@@ -1,7 +1,7 @@
 const express = require('express');
 
-const cartsController = require('../controllers/cart-controllers');
 const checkAuth = require('../middleware/check-auth');
+const cartsController = require('../controllers/cart-controllers');
 
 const router = express.Router();
 
@@ -10,5 +10,7 @@ router.use(checkAuth);
 router.post('/', cartsController.addToCart);
 
 router.get('/', cartsController.getCartItems);
+
+router.delete('/:iid', cartsController.deleteCartItem);
 
 module.exports = router;

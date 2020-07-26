@@ -1,10 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
+
 import Typography from '@material-ui/core/Typography';
+import { AuthContext } from '../../shared/context/auth-context';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
 import './CartItem.css'
 
 const CartItem = props => {
-    const { img, name, abv, qty, qqty, size, price, tprice } = props;
+    const { id, img, name, abv, qty, qqty, size, price, tprice } = props;
+    const { sendRequest } = useHttpClient();
+    const auth = useContext(AuthContext);
+
+    const deleteItemHandler = async () => {
+        try {
+            await sendRequest(
+                process.env.REACT_APP_BACKEND_URL + `/cart/${id}`,
+                'DELETE',
+                null,
+                { Authorization: `Bearer ${auth.token}` }
+            );
+        } catch (err) { console.log(err); }
+        props.onDelete(id);
+    };
+
     return (
         <React.Fragment>
             <div className="cartitem__container">
@@ -22,7 +40,7 @@ const CartItem = props => {
                     <Typography variant="body2" color="textSecondary">
                         {tprice}
                     </Typography>
-                    <div className="cartitem__x">
+                    <div className="cartitem__x" id={id} onClick={deleteItemHandler}>
                         <Typography variant="h6">
                             {'X'}
                         </Typography>

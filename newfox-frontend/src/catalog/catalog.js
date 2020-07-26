@@ -38,7 +38,7 @@ const Catalog = () => {
                 </div>
             )}
             {breweryList && <ItemList data={breweryList} item="brewery" />}
-            <SearchBar data={beerList} onChange={updateSearchList} />
+            {beerList && <SearchBar data={beerList} onChange={updateSearchList} />}
             {isLoading && !beerList && (
                 <div className="center">
                     <LoadingSpinner />

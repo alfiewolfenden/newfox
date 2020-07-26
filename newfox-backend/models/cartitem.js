@@ -4,7 +4,8 @@ const cartItemSchema = new mongoose.Schema({
     user: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
     beer: {
         beerId: { type: mongoose.Types.ObjectId, required: true, ref: 'Beer' },
-        brewery: { type: mongoose.Types.ObjectId, required: true, ref: 'Brewery' },
+        breweryId: { type: mongoose.Types.ObjectId, required: true, ref: 'Brewery' },
+        brewery: { type: String, required: true },
         image: { type: String, required: true },
         name: { type: String, required: true },
         abv: { type: Number, required: true },

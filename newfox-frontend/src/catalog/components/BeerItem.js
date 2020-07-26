@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import ErrorModal from '../../shared/uielements/ErrorModal';
+import Button from '@material-ui/core/Button';
 // import Modal from '../../shared/uielements/Modal';
 // import Button from '../../shared/formelements/Button';
 import './BeerItem.css'
@@ -21,7 +22,7 @@ const BeerItem = props => {
 
     const addToCart = async () => {
         try {
-            const responseData = await sendRequest(
+            await sendRequest(
                 process.env.REACT_APP_BACKEND_URL + '/cart',
                 'POST',
                 JSON.stringify({
@@ -32,7 +33,7 @@ const BeerItem = props => {
                     Authorization: `Bearer ${auth.token}`
                 }
             );
-            console.log(responseData);
+            // console.log(responseData);
         } catch (err) {
             console.log(err);
         }
@@ -79,7 +80,7 @@ const BeerItem = props => {
                     {size}{' ⇒ '}{price}
                 </Typography>
                 <div>
-                    <button onClick={addToCart}>+</button>
+                    <Button variant="outlined" onClick={addToCart}>+</Button>
                 </div>
             </div>
         </React.Fragment>

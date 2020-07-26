@@ -13,7 +13,7 @@ const addToCart = async (req, res, next) => {
     try {
         beer = await Beer.findById(beerId);
     } catch (err) {
-        const error = new HttpError('Something went wrong :(', 500);
+        const error = new HttpError('Could not find beer :(', 500);
         return next(error);
     }
 
@@ -26,7 +26,7 @@ const addToCart = async (req, res, next) => {
     try {
         user = await User.findById(req.userData.userId);
     } catch (err) {
-        const error = new HttpError('Something went wrong :(', 500);
+        const error = new HttpError('Could not find user :(', 500);
         return next(error);
     }
 
@@ -50,6 +50,7 @@ const addToCart = async (req, res, next) => {
             user,
             beer: {
                 beerId: beer,
+                breweryId: beer.breweryId,
                 brewery: beer.brewery,
                 image: beer.image,
                 name: beer.name,
@@ -70,7 +71,8 @@ const addToCart = async (req, res, next) => {
             await user.save({ session: sess });
             await sess.commitTransaction();
         } catch (err) {
-            const error = new HttpError('Something went wrong :(', 500);
+            const error = new HttpError('Something went wrong, could not save cart item :(', 500);
+            console.log(err);
             return next(error);
         }
 
@@ -112,5 +114,48 @@ const getCartItems = async (req, res, next) => {
     });
 };
 
+const deleteCartItem = async (req, res, next) => {
+    const id = req.params.iid;
+
+    let user;
+    try {
+        user = await User.findById(req.userData.userId);
+    } catch (err) {
+        const error = new HttpError('Something went wrong, could not find user :(', 500);
+        return next(error);
+    }
+
+    let itemToDelete;
+    try {
+        itemToDelete = await CartItem.findById(id);
+    } catch (err) {
+        const error = new HttpError('Something went wrong, could not find item :(', 500);
+        return next(error);
+    }
+
+    console.log(user.id);
+    console.log(itemToDelete.user);
+
+    if (user.id != itemToDelete.user) {
+        const error = new HttpError('Something went wrong, this action is not authorized.', 404);
+        return next(error);
+    }
+
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await itemToDelete.remove({ session: sess });
+        user.cartitems.pull(itemToDelete);
+        await user.save({ session: sess });
+        await sess.commitTransaction();
+    } catch (err) {
+        const error = new HttpError('Something went wrong, item not deleted :(', 500);
+        return next(error);
+    }
+
+    res.status(200).json({ message: 'item deleted' });
+};
+
 exports.addToCart = addToCart;
 exports.getCartItems = getCartItems;
+exports.deleteCartItem = deleteCartItem;
