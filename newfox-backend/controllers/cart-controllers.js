@@ -37,13 +37,14 @@ const addToCart = async (req, res, next) => {
 
     let hasBeer;
     try {
-        hasBeer = await CartItem.findOne({ beer: { beerId } })
+        hasBeer = await CartItem.find({ user, 'beer.beerId': beerId })
     } catch (err) {
+        console.log(err);
         const error = new HttpError('Something went wrong :(', 500);
         return next(error);
     }
 
-    if (!hasBeer) {
+    if (hasBeer.length === 0) {
 
         const newCartItem = new CartItem({
             user,
@@ -74,6 +75,17 @@ const addToCart = async (req, res, next) => {
         }
 
         res.status(201).json({ user: user.id, beer: newCartItem.beer, qty: newCartItem.qty });
+    } else {
+        hasBeer[0].qty += 1;
+        try {
+            await hasBeer[0].save();
+        } catch (err) {
+            const error = new HttpError('Something went wrong :(', 500);
+            console.log(err);
+            return next(error);
+        }
+
+        res.status(201).json({ user: hasBeer[0].user, beer: hasBeer[0].beer.name, qty: hasBeer[0].qty });
     }
 };
 

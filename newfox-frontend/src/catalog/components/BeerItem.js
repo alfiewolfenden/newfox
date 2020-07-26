@@ -1,22 +1,23 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
+// import { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 
 import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import ErrorModal from '../../shared/uielements/ErrorModal';
-import Modal from '../../shared/uielements/Modal';
-import Button from '../../shared/formelements/Button';
+// import Modal from '../../shared/uielements/Modal';
+// import Button from '../../shared/formelements/Button';
 import './BeerItem.css'
 
 const BeerItem = props => {
     const auth = useContext(AuthContext);
     const { error, sendRequest, clearError } = useHttpClient();
     const { id, name, url, size, style, abv, price, qqty } = props
-    const [showDescriptionModal, setShowDescriptionModal] = useState(false);
+    // const [showDescriptionModal, setShowDescriptionModal] = useState(false);
 
-    const showDescriptionModalHandler = () => {
-        setShowDescriptionModal(!showDescriptionModal);
-    };
+    // const showDescriptionModalHandler = () => {
+    //     setShowDescriptionModal(!showDescriptionModal);
+    // };
 
     const addToCart = async () => {
         try {
@@ -40,7 +41,7 @@ const BeerItem = props => {
     return (
         <React.Fragment>
             <ErrorModal error={error} onClear={clearError} />
-            <Modal
+            {/* <Modal
                 show={showDescriptionModal}
                 onCancel={showDescriptionModalHandler}
                 header={`${name} ${abv}%`}
@@ -64,7 +65,7 @@ const BeerItem = props => {
                     <Button>add to Cart</Button>
                 </div>
 
-            </Modal>
+            </Modal> */}
             <div
                 className="beeritem__image-container"
             // onClick={showDescriptionModalHandler}
