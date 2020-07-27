@@ -12,9 +12,11 @@ const cartItemSchema = new mongoose.Schema({
         style: { type: String, required: true },
         qqty: { type: Number, required: true },
         size: { type: String, enum: ['30L', '20L', 'C330', 'C440'], required: true },
-        price: { type: Number, required: true }
+        price: { type: Number, required: true },
+        uprice: { type: Number, required: true }
     },
-    qty: { type: Number, required: true }
+    qty: { type: Number, required: true },
+    tprice: { type: Number, required: true }
 });
 
 module.exports = mongoose.model('CartItem', cartItemSchema);

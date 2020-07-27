@@ -4,7 +4,6 @@ const HttpError = require('../models/http-error');
 const CartItem = require('../models/cartitem');
 const User = require('../models/user');
 const Beer = require('../models/beer');
-const cartitem = require('../models/cartitem');
 
 const addToCart = async (req, res, next) => {
     const { beerId } = req.body;
@@ -35,6 +34,13 @@ const addToCart = async (req, res, next) => {
         return next(error);
     }
 
+    let priceVariable;
+    if (user.pgroup === "groupone") {
+        priceVariable = 1;
+    } else {
+        priceVariable = 0;
+    }
+
     let hasBeer;
     try {
         hasBeer = await CartItem.find({ user, 'beer.beerId': beerId })
@@ -58,9 +64,11 @@ const addToCart = async (req, res, next) => {
                 style: beer.style,
                 qqty: beer.qqty,
                 size: beer.size,
-                price: beer.price
+                price: beer.price * priceVariable,
+                uprice: beer.price * priceVariable * beer.qqty
             },
-            qty: 1
+            qty: 1,
+            tprice: beer.price * priceVariable * beer.qqty
         })
 
         try {
@@ -79,6 +87,7 @@ const addToCart = async (req, res, next) => {
         res.status(201).json({ user: user.id, beer: newCartItem.beer, qty: newCartItem.qty });
     } else {
         hasBeer[0].qty += 1;
+        hasBeer[0].tprice = hasBeer[0].qty * hasBeer[0].beer.uprice;
         try {
             await hasBeer[0].save();
         } catch (err) {

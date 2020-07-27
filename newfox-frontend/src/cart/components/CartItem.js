@@ -20,7 +20,7 @@ const CartItem = props => {
                 { Authorization: `Bearer ${auth.token}` }
             );
         } catch (err) { console.log(err); }
-        props.onDelete(id);
+        props.onDelete(id, tprice);
     };
 
     return (
@@ -35,10 +35,10 @@ const CartItem = props => {
                 <div>{qty}</div>
                 <div className="cartitem__details">
                     <Typography variant="body2" color="textSecondary">
-                        {`${qqty}x${size} @${price}`}
+                        {`${qqty}x${size} @${price}€`}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                        {tprice}
+                        {`${tprice}€`}
                     </Typography>
                     <div className="cartitem__x" id={id} onClick={deleteItemHandler}>
                         <Typography variant="h6">

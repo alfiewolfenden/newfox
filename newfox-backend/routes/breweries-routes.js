@@ -10,6 +10,6 @@ router.get('/', breweriesController.getBreweries);
 
 router.post('/beers', breweriesController.addBeer);
 
-router.get('/beers', breweriesController.getBeers);
+router.get('/beers/:uid', breweriesController.getBeers);
 
 module.exports = router;

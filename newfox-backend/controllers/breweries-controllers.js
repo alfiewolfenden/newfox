@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const Brewery = require('../models/brewery');
 const Beer = require('../models/beer');
+const User = require('../models/user');
 const HttpError = require('../models/http-error');
 
 const addBrewery = async (req, res, next) => {
@@ -100,14 +101,35 @@ const addBeer = async (req, res, next) => {
 };
 
 const getBeers = async (req, res, next) => {
-    let beerList;
+    const uid = req.params.uid;
+    let priceVariable;
+    let user;
+
     try {
-        beerList = await Beer.find({})
+        user = await User.findById(uid);
     } catch (err) {
-        const error = new HttpError('Something went wrong :(', 500);
+        const error = new HttpError('Beer list not found, no authorization', 500);
         return next(error);
     }
-    res.status(200).json({ beers: beerList.map(beer => beer.toObject({ getters: true })) });
+
+    if (user.pgroup === "groupone") {
+        priceVariable = 1;
+    } else {
+        priceVariable = 0;
+    }
+
+    let pricedBeerList;
+    try {
+        beerList = await Beer.find({});
+        pricedBeerList = beerList.map(beer => {
+            beer.price *= priceVariable;
+            return beer;
+        });
+    } catch (err) {
+        const error = new HttpError('Something went wrong, could not find beer list :(', 500);
+        return next(error);
+    }
+    res.status(200).json({ beers: pricedBeerList.map(beer => beer.toObject({ getters: true })) });
 };
 
 exports.addBrewery = addBrewery;

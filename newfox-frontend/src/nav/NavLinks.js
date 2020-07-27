@@ -16,6 +16,11 @@ const NavLinks = () => {
             )} */}
             {auth.isLoggedIn && (
                 <li>
+                    <span>{auth.userId}</span>
+                </li>
+            )}
+            {auth.isLoggedIn && (
+                <li>
                     <NavLink to="/catalog">CATALOG</NavLink>
                 </li>
             )}

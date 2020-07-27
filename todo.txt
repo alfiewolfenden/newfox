@@ -1,1 +1,8 @@
-Plan out remaining app functions.
+Add/remove/choose qty functionality
+add beer description page
+Error handling when dismounting during http requests!
+Order functionality (sendnode?)!
+CSS cleaning up
+
+create an admin dashboard for database management (seperate server)
+clear understanding of database design

@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import { useHttpClient } from '../shared/hooks/http-hook';
 import ItemList from './components/ItemList';
 import SearchBar from './components/SearchBar';
 import LoadingSpinner from '../shared/uielements/LoadingSpinner';
 import ErrorModal from '../shared/uielements/ErrorModal';
+import { AuthContext } from '../shared/context/auth-context';
 import './catalog.css'
 
 const Catalog = () => {
+    const auth = useContext(AuthContext);
     const [breweryList, setBreweryList] = useState();
     const [beerList, setBeerList] = useState();
     const [searchedBeerList, setSearchedBeerList] = useState();
@@ -18,12 +20,12 @@ const Catalog = () => {
             try {
                 const breweryData = await sendRequest(process.env.REACT_APP_BACKEND_URL + '/breweries');
                 setBreweryList(breweryData.breweries);
-                const beerData = await sendRequest(process.env.REACT_APP_BACKEND_URL + '/breweries/beers');
+                const beerData = await sendRequest(process.env.REACT_APP_BACKEND_URL + `/breweries/beers/${auth.userId}`);
                 setBeerList(beerData.beers);
             } catch (error) { }
         };
         requestItemData();
-    }, [sendRequest])
+    }, [sendRequest, auth.userId])
 
     const updateSearchList = (newArray) => {
         setSearchedBeerList(newArray);

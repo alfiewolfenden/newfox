@@ -12,6 +12,7 @@ const Cart = () => {
     const auth = useContext(AuthContext);
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
     const [cartItemListData, setCartItemListData] = useState();
+    const [cartTotalPrice, setCartTotalPrice] = useState(0);
 
     useEffect(() => {
         const requestItemData = async () => {
@@ -26,13 +27,19 @@ const Cart = () => {
                     }
                 );
                 setCartItemListData(cartData.cartItems);
+                setCartTotalPrice(() => {
+                    let tPrice = 0;
+                    cartData.cartItems.forEach(item => tPrice += item.tprice);
+                    return tPrice;
+                })
             } catch (error) { }
         };
         requestItemData();
     }, [sendRequest, auth.token])
 
-    const itemDeletedHandler = (deletedItemId) => {
+    const itemDeletedHandler = (deletedItemId, deletedItemPrice) => {
         setCartItemListData(prevItems => prevItems.filter(i => i.id !== deletedItemId));
+        setCartTotalPrice(prevPrice => prevPrice - deletedItemPrice);
     };
 
     return (
@@ -40,8 +47,9 @@ const Cart = () => {
             <ErrorModal error={error} onClear={clearError} />
             <div className="cart__container">
                 <h2>Cart</h2>
+                {cartItemListData && cartItemListData.length === 0 && <h3>Your cart is empty!</h3>}
                 {!isLoading && cartItemListData ? <CartItemList data={cartItemListData} onDeleteItem={itemDeletedHandler} /> : <LoadingSpinner />}
-                <h3>Total: $750</h3>
+                <h3>Total: €{cartTotalPrice}</h3>
                 <div>
                     <p>Escompte de 5 % en cas de paiement comptant</p>
                     <p>Beer Drop juillet 2020 #4 - Possibilité de panacher les brasseries</p>

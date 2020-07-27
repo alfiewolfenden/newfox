@@ -18,7 +18,7 @@ const CartItemList = props => {
                     qqty={cartitem.beer.qqty}
                     size={cartitem.beer.size}
                     price={cartitem.beer.price}
-                    tprice={cartitem.beer.tprice}
+                    tprice={cartitem.tprice}
                     onDelete={props.onDeleteItem}
                     />
             ))}

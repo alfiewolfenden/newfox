@@ -39,6 +39,7 @@ const signupUser = async (req, res, next) => {
         {
             email,
             password: hashedPassword,
+            pgroup: 'default',
             cartitems: []
         }
     );
