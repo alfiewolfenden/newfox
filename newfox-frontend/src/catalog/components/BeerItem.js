@@ -77,7 +77,7 @@ const BeerItem = props => {
                     {style}{' '}{abv}{'%'}
                 </Typography>
                 <Typography variant="body2" align="center">
-                    {size}{' ⇒ '}{price}
+                    {size}{' ⇒ '}{price}{'€'}
                 </Typography>
                 <div>
                     <Button variant="outlined" onClick={addToCart}>+</Button>

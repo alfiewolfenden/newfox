@@ -1,4 +1,3 @@
-Add/remove/choose qty functionality
 add beer description page
 Error handling when dismounting during http requests!
 Order functionality (sendnode?)!

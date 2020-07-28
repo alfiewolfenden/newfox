@@ -20,6 +20,7 @@ const CartItemList = props => {
                     price={cartitem.beer.price}
                     tprice={cartitem.tprice}
                     onDelete={props.onDeleteItem}
+                    onPriceChange={props.onPriceChange}
                     />
             ))}
         </div>

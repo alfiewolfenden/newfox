@@ -19,6 +19,12 @@
     margin-right: 10px;
 }
 
+.cartitem__qty-selector,
+.cartitem__qty-selector FormControl {
+    justify-content: center;
+    align-items: center;
+}
+
 .cartitem__details {
     display: inline-flex;
     align-items: center;

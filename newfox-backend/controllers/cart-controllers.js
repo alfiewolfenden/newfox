@@ -123,6 +123,41 @@ const getCartItems = async (req, res, next) => {
     });
 };
 
+const updateCartItem = async (req, res, next) => {
+    const id = req.params.iid;
+    const { newQty } = req.body;
+    let user;
+    try {
+        user = await User.findById(req.userData.userId);
+    } catch (err) {
+        const error = new HttpError('Something went wrong, could not find user :(', 500);
+        return next(error);
+    }
+    let itemToUpdate;
+    try {
+        itemToUpdate = await CartItem.findById(id);
+    } catch (err) {
+        const error = new HttpError('Something went wrong, could not find item :(', 500);
+        return next(error);
+    }
+    if (user.id != itemToUpdate.user) {
+        const error = new HttpError('Something went wrong, this action is not authorized.', 400);
+        return next(error);
+    }
+
+    itemToUpdate.qty = newQty;
+    itemToUpdate.tprice = newQty * itemToUpdate.beer.uprice;
+
+    try {
+        itemToUpdate.save();
+    } catch (err) {
+        const error = new HttpError('Something went wrong, could not update', 500);
+        return next(error);
+    }
+
+    res.status(200).json({ beer: itemToUpdate.beer.name, newQty: newQty });
+};
+
 const deleteCartItem = async (req, res, next) => {
     const id = req.params.iid;
 
@@ -141,9 +176,6 @@ const deleteCartItem = async (req, res, next) => {
         const error = new HttpError('Something went wrong, could not find item :(', 500);
         return next(error);
     }
-
-    console.log(user.id);
-    console.log(itemToDelete.user);
 
     if (user.id != itemToDelete.user) {
         const error = new HttpError('Something went wrong, this action is not authorized.', 404);
@@ -168,3 +200,4 @@ const deleteCartItem = async (req, res, next) => {
 exports.addToCart = addToCart;
 exports.getCartItems = getCartItems;
 exports.deleteCartItem = deleteCartItem;
+exports.updateCartItem = updateCartItem;

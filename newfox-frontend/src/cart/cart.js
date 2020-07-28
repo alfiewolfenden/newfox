@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 
 import CartItemList from './components/CartItemList';
 import { useHttpClient } from '../shared/hooks/http-hook';
@@ -42,14 +42,18 @@ const Cart = () => {
         setCartTotalPrice(prevPrice => prevPrice - deletedItemPrice);
     };
 
+    const priceChangeHandler = useCallback((priceChange) => {
+        setCartTotalPrice(prevPrice => prevPrice + priceChange);
+    }, []);
+
     return (
         <React.Fragment>
             <ErrorModal error={error} onClear={clearError} />
             <div className="cart__container">
                 <h2>Cart</h2>
                 {cartItemListData && cartItemListData.length === 0 && <h3>Your cart is empty!</h3>}
-                {!isLoading && cartItemListData ? <CartItemList data={cartItemListData} onDeleteItem={itemDeletedHandler} /> : <LoadingSpinner />}
-                <h3>Total: €{cartTotalPrice}</h3>
+                {!isLoading && cartItemListData ? <CartItemList data={cartItemListData} onDeleteItem={itemDeletedHandler} onPriceChange={priceChangeHandler} /> : <LoadingSpinner />}
+                <h3>Total: {cartTotalPrice.toFixed(2)}€</h3>
                 <div>
                     <p>Escompte de 5 % en cas de paiement comptant</p>
                     <p>Beer Drop juillet 2020 #4 - Possibilité de panacher les brasseries</p>
