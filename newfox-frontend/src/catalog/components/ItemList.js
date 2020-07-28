@@ -27,6 +27,7 @@ const ItemList = props => {
                         abv={item.abv}
                         price={item.price}
                         qqty={item.qqty}
+                        toaster={props.toaster}
                     />
                 ))
             }

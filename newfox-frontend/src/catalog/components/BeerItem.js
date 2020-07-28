@@ -13,7 +13,7 @@ import './BeerItem.css'
 const BeerItem = props => {
     const auth = useContext(AuthContext);
     const { error, sendRequest, clearError } = useHttpClient();
-    const { id, name, url, size, style, abv, price, qqty } = props
+    const { toaster, id, name, url, size, style, abv, price, qqty } = props
     // const [showDescriptionModal, setShowDescriptionModal] = useState(false);
 
     // const showDescriptionModalHandler = () => {
@@ -37,6 +37,7 @@ const BeerItem = props => {
         } catch (err) {
             console.log(err);
         }
+        toaster(name);
     };
 
     return (
