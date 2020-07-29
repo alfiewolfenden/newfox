@@ -1,6 +1,5 @@
 add beer description page
-Error handling when dismounting during http requests!
-Order functionality (sendnode?)!
+Order functionality (sendgrid?)
 CSS cleaning up
 
 create an admin dashboard for database management (seperate server)
